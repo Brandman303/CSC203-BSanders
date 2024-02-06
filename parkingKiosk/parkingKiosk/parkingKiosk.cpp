@@ -46,6 +46,7 @@ int main() {
     }
     else {
         cout << "Goodbye" << endl;
+        
     }
 
     return 0;
@@ -54,3 +55,5 @@ int main() {
 int totalCost(int hours, int vehicleCost) {
     return hours * vehicleCost;
 }
+
+
