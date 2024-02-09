@@ -36,27 +36,39 @@ int getSize(unsigned long long int number);
 unsigned long int getPrefix(unsigned long long int number, int k);
 
 int main() {
-	unsigned long long int ccNum = 4388576018410707; //--is valid; 4388576018402626--is invalid ;
-	cout << ((isValid(ccNum)) ? "True" : "False");
+	unsigned long long int ccNum;
+	bool enterNum = true;
+	string yesNo;
+	do {//4388576018410707--is valid; 4388576018402626--is invalid ;
+		cout << "Please enter your credit number without spaces or dashes: " << endl;
+		cin >> ccNum;
+		cout << endl << (isValid(ccNum) ? "True" : "False") << endl;
+		cout << "Would you like to enter another credit card number? y/n" << endl;
+		cin >> yesNo;
+		if (yesNo != "y") {
+			enterNum = false;
+			cout << endl << "Goodbye" << endl;
+		}
+	} while (enterNum);
+	
 }
 
 bool isValid(unsigned long long int number) {
-	int size;
-	int theSums;
-	int sumEven = sumOfDoubleEvenPlace(number); // corrected
-	int sumOdd = sumOfOddPlace(number); //need2fix
-
-
-	size = getSize(number);
-	theSums = sumEven + sumOdd;
-	
-	return (size >= 13 && size <= 16 && (theSums % 10) == 0) ? true : false;
+	int size = getSize(number);
+	int totSum;
+	int prefix = getPrefix(number, 2);
+	totSum = sumOfDoubleEvenPlace(number) + sumOfOddPlace(number);
+	if (prefix == 37 || prefix == 4 || prefix == 5 || prefix == 6) {
+		return (size >= 13 && size <= 16 && (totSum % 10) == 0) ? true : false;
+	}
+	else {
+		return false;
+	}
 }
 int sumOfDoubleEvenPlace(unsigned long long int number) {
 	int sumEven = 0;
 	int lastDigit;
 	bool evenDigit = false;
-
 	while (number > 0) {
 		lastDigit = number % 10;
 		if (evenDigit) {
@@ -68,7 +80,7 @@ int sumOfDoubleEvenPlace(unsigned long long int number) {
 	}
 	return sumEven;
 }
-int getDigit(int num) { // ask if this function is meant only for the sum right to left of every second number. or for both even and odd number
+int getDigit(int num) { 
 	return (num >= 10) ? ((num / 10) + (num % 10)) : num;
 }
 int sumOfOddPlace(unsigned long long int number) {
@@ -90,11 +102,28 @@ int getSize(unsigned long long int number) {
 	int size;
 	size = 0;
 
-	while (number > 0) { //make sure this doesn't count zero after going right to left. could have to do with pre and post iteration
-
+	while (number > 0) { 
 		number /= 10;
 		size++;
 
 	}
 	return size;
+}
+unsigned long int getPrefix(unsigned long long int number, int k) {
+	int size;
+	if (number < k) {
+		return number;
+	}
+	else {
+		size = getSize(number);
+		for (int i = 0; i < (size - k); i++) {
+			number /= 10;
+		}
+		if (number == 37) {
+			return number;
+		}
+		else {
+			return number /= 10;
+		}
+	}
 }
