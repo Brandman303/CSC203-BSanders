@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-
+bool gameOverCheckHelper(int grid[][7], int counter, int row, int col);
 void displayGrid();//formatted string to display a connect four grid
 bool gameOverCheck(int grid[][7], int numDisk); //checks if there is a winner
 void createGridRow(); //this is used by displayGrid to produce a row
@@ -62,15 +62,65 @@ bool gameOverCheck(int grid[][7], int numDisk) {
 	if (numDisk <= 0) {
 		return true;
 	}
-	for (int i = 0; i < 6; i++) { //traverses grid and checks for four in a row 
-		for (int j = 0; j < 7; j++) {
+	// Traverses and checks each row to check for four in a row horizontal.
+	for (int i = 0; i < 6; i++) { //traverses row 
+		for (int j = 0; j < 7; j++) { //traverses columns
 			if (grid[i][j] != 0) {
-				counter++; //this is just if there is any 4 disks in the array which isnt right
+				counter++;
 				if (counter == 4) {//maybe a switch statement would be more appropriate for determining the row and check?
 					return true;
 				}
 			}
 		}
-
+		counter = 0; // this resets the check for each row
 	}
+	//may need to hard check counter back to zero here
+	//traverses each column to check for four in a row vertically
+	for (int j = 0; j < 7; j++) { //traverse columns
+		for (int i = 0; i < 6; i++) { //traverse rows
+			if (grid[i][j] != 0) {
+				counter++;
+				if (counter == 4) {
+					return true;
+				}
+			}
+		}
+		counter = 0;
+	}
+}
+//may need to add col argument
+bool gameOverCheckHelper(int grid[][7], int counter, int row, int col) { //recursively finds diagnol win
+	if (row < 0 || col < 0) { //evaluate what should return, just stoping recursion for now
+		return (counter == 4) ? true : false;
+	}
+	
+	for (int i = row; i >= 0; i--) { // may need this in gameovercheck to intialize the loop then in recursive just move up and over 1 check 4 times
+		for (int j = col; j >= 0; j--) {
+			if (grid[i][j] != 0) {
+				counter++;
+				//row--;
+				//col--; //moves up left then change bottom to check diagnol.
+				gameOverCheckHelper(grid, counter, row, col);
+			}
+		}
+	}
+}
+
+bool diagonalGameOverCheck(int grid[][7], int counter, int row, int col) {
+	row--;
+	col--;
+	if (row < 0 || col < 0) {
+		return (counter == 4) ? true : false;
+	}
+	if (counter == 4) {
+		return true;
+	}
+	if (grid[row][col] != 0) {
+		counter++;
+		diagonalGameOverCheck(grid, counter, row, col);
+	}
+	else {
+		return false;
+	}
+
 }
