@@ -106,7 +106,7 @@ bool gameOverCheckHelper(int grid[][7], int counter, int row, int col) { //recur
 	}
 }
 
-bool diagonalGameOverCheck(int grid[][7], int counter, int row, int col) {
+bool diagonalGameOverCheck(int grid[][7], int counter, int row, int col) { //needs prototype
 	row--;
 	col--;
 	if (row < 0 || col < 0) {
