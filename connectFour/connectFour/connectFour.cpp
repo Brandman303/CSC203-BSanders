@@ -2,19 +2,16 @@
 
 using namespace std;
 
-void displayGrid(const int rows, const int cols, int grid[][7]);//formatted string to display a connect four grid
+void displayGrid(const int rows, const int cols, int grid[][7]);//formatted string to display a blank connect four grid
 bool gameOverCheck(int grid[][7], int numDisk); //checks if there is a winner
-void createGridRow(const int cols, int grid[][7]); //this is used by displayGrid to produce a row
-void displayBottom();
+void createGridRow(const int cols, int grid[][7]); //this is used to produce each row row
+void displayBottom(const int cols); //displays the bottom of the grid
 void dropDisk(int grid[][7], int& numDisk, int colChoice, bool playerTurn); // this lets player drop a disk in chosen column
-void startingGridArray(int grid[][7], int const rows, int const cols);
+void startingGridArray(int grid[][7], int const rows, int const cols); //created the initial 2d array filled with zeros
 void printGridArray(int grid[][7], int const rows, int const cols);// to traverse the array and print the grid to see if game is working correctly
-
+void displayColumns(const int cols); // shows the column numbers available to choose from
 /*
-* To-Do: 
-* need to add a check for correctly entered numbers
-* move numbers over to 1-7 instead of 0-6 so it is easier for the users
-* implement display bottom
+* To-Do
 * cleanup comments and code
 * add documentation.
 */
@@ -27,16 +24,26 @@ int main() {
 	bool gameOver = false; 
 	bool playerTurn = true;
 	startingGridArray(grid, rows, cols);
+	displayColumns(cols);
 	displayGrid(rows, cols, grid);
+	displayBottom(cols);
 
 	do {
-		cout << "enter the column number you would like to drop your disk into: " << endl;
+		cout << "Enter the column number you would like to drop your disk into: ";
 		cin >> colChoice;
-		dropDisk(grid, numDisk, colChoice, playerTurn);
-		createGridRow(cols, grid);
-		gameOver = gameOverCheck(grid, numDisk); //could probably squeeze this into the conditional statement and eliminate gameOver variable
-		if (gameOver != true) {
-			playerTurn = !playerTurn;
+		if (colChoice >= 1 && colChoice <= 7) {
+			colChoice--;
+			dropDisk(grid, numDisk, colChoice, playerTurn);
+			displayColumns(cols);
+			createGridRow(cols, grid);
+			displayBottom(cols);
+			gameOver = gameOverCheck(grid, numDisk);
+			if (gameOver != true) {
+				playerTurn = !playerTurn;
+			}
+		}
+		else {
+			cout << "Not a valid input. Try Again." << endl;
 		}
 	} while (gameOver != true);
 	cout << "Game Over" << endl;
@@ -86,7 +93,18 @@ void createGridRow(const int cols, int grid[][7]) {
 	 
 }
 
-void displayBottom();
+void displayBottom(const int cols) {
+	for (int i = 0; i < cols; i++) {
+		cout << " _";
+	}
+	cout << endl;
+}
+
+void displayColumns(const int cols) {
+	for (int i = 0; i < cols; i++) {
+		cout << " " << i + 1;
+	}
+}
 
 void startingGridArray(int grid[][7], int const rows, int const cols) {
 	
