@@ -18,9 +18,9 @@ public:
 	void operator-=(const int& right); //was orignally left, check later
 	Sets& operator=(const Sets& right);
 
-	friend Sets& operator*(const Sets& left, const Sets& right);
-	friend Sets& operator-(const Sets& left, const Sets& right);
-	friend Sets& operator+(const Sets& left, const Sets& right);
+	friend Sets operator*(const Sets& left, const Sets& right);
+	friend Sets operator-(const Sets& left, const Sets& right);
+	friend Sets operator+(const Sets& left, const Sets& right);
 
 
 	void print() const;

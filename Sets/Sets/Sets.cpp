@@ -16,14 +16,12 @@ void Sets::operator-=(const int& right) { // was originally left, check later
 	set.pop_back();
 }
 Sets& Sets::operator=(const Sets& right) {
-	Sets assign;
-	for (int element : right.set) {
-		assign += element;
-	}
-	return assign;
+	if (this == &right) return *this;
+	set = right.set;
+	return *this;
 }
 //- and + don't need friend in front here?
-Sets& operator*(const Sets& left, const Sets& right) {
+Sets operator*(const Sets& left, const Sets& right) {
 	Sets result;
 	for (int element : left.set) {
 		for (int oElement : right.set) {
@@ -35,7 +33,7 @@ Sets& operator*(const Sets& left, const Sets& right) {
 	}
 	return result;
 }
-Sets& operator-(const Sets& left, const Sets& right) {
+Sets operator-(const Sets& left, const Sets& right) {
 	Sets difference;
 	bool match;
 	for (int element : left.set) {
@@ -52,39 +50,31 @@ Sets& operator-(const Sets& left, const Sets& right) {
 	}
 	return difference;
 }
-Sets& operator+(const Sets& left, const Sets& right) {
+Sets operator+(const Sets& left, const Sets& right) {
 	Sets sum;
 	bool match;
-	for (int elem : right.set) {
+	for (int elem : left.set) {
 		sum += elem;
 	}
-	for (int element : left.set) {
+	for (int element : right.set) {
 		match = false;
-		for (int oElement : right.set) {
+
+		for (int oElement : sum.set) {
 			if (element == oElement) {
 				match = true;
 				break;
 			}
 		}
-		if (match == 0) {
+		if (!match) {
 			sum += element; 
 		}
 	}
-	//for (int elem : right.set) {
-		//match = false;
-		//for (int oElem : left.set) {
-			//if (elem == oElem) {
-			//	match = true;
-			//	break;
-			//}
-		//}
-		//if (match == 0) {
-		//	sum += elem;
-		//}
-	//}
 	return sum;
 }
 
 void Sets::print() const {
-
+	for (int element : set) {
+		cout << element << " ";
+	}
+	cout << endl;
 }
