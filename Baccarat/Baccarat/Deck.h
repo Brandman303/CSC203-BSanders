@@ -17,7 +17,7 @@ public:
 
 	void shuffle();
 	void selectionSort();
-	void swap(const vector<Card>& cards, int index1, int index2);
+	void swap(vector<Card>& cards, int index1, int index2);
 	
 	const vector<Card>& getCards() const;
 	void setCards(const vector<Card>& cards);

@@ -26,6 +26,7 @@ public:
 	void setRank(int newRank);
 	void setSuit(int newSuit);
 
+	int compareTo(const Card& oCard);
 	string toString() const;
 };
 

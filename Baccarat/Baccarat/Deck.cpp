@@ -22,24 +22,59 @@ Deck::Deck() {
 Deck::Deck(int numCards) {
 	cards.reserve(numCards);
 }
+//Deck() destructor.
 Deck::~Deck() {
-
+	
 }
+//shuffles the deck of cards.
 void Deck::shuffle() {
+	int index = 0;
+	Card temp;
+	srand(time(NULL));
 
+	for (int i = 0; i < cards.size(); i++) {
+		index = rand() % cards.size();
+		temp = cards[i];
+		cards[i] = cards[index];
+		cards[index] = temp;
+	}
 }
+//sorts the deck of cards in ascending order of rank and suit.
 void Deck::selectionSort() {
-
+	for (int i = 0; i < cards.size() - 1; i++) {
+		int bigIndex = 0;
+		for (int j = 1; j < cards.size() - i; j++) {
+			if (cards[j].compareTo(cards[bigIndex]) > 0) {
+				bigIndex = j;
+			}
+		}
+	}
 }
-void Deck::swap(const vector<Card>& cards, int index1, int index2) {
+//swaps two cards in the deck.
+void Deck::swap(vector<Card>& cards, int index1, int index2) {
+	Card temp;
 
+	temp = cards[index1];
+	cards[index1] = cards[index2];
+	cards[index2] = temp;
 }
+//returns the deck of cards.
 const vector<Card>& Deck::getCards() const {
-
+	return cards;
 }
+//sets the deck of cards to a new deck of cards.
 void Deck::setCards(const vector<Card>& cards) {
-
+	this->cards = cards;
 }
+//returns the deck of cards as a string.
+//double check the logic. It may not work as intended.
 string Deck::toString() {
-
+	string str;
+	for (size_t i = 0; i < cards.size(); ++i) {
+		if (i > 0) {
+			str += ", ";
+		}
+		str += cards[i].toString();
+	}
+	return str;
 }

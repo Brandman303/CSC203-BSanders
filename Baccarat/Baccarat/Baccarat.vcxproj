@@ -24,8 +24,10 @@
     <ClInclude Include="Hand.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Baccarat.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Deck.cpp" />
+    <ClCompile Include="Hand.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
