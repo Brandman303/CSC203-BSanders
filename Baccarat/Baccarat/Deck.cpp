@@ -39,7 +39,7 @@ void Deck::shuffle() {
 		cards[index] = temp;
 	}
 }
-//sorts the deck of cards in ascending order of rank and suit.
+//sorts the deck of cards in ascending order of rank in a suit, then rank in next suit...
 void Deck::selectionSort() {
 	for (int i = 0; i < cards.size() - 1; i++) {
 		int bigIndex = 0;
@@ -48,6 +48,7 @@ void Deck::selectionSort() {
 				bigIndex = j;
 			}
 		}
+		swap(cards, bigIndex, cards.size() - i - 1);
 	}
 }
 //swaps two cards in the deck.
@@ -61,6 +62,10 @@ void Deck::swap(vector<Card>& cards, int index1, int index2) {
 //returns the deck of cards.
 const vector<Card>& Deck::getCards() const {
 	return cards;
+}
+Card Deck::getCard() {
+	Card card = cards.back();
+	return card;
 }
 //sets the deck of cards to a new deck of cards.
 void Deck::setCards(const vector<Card>& cards) {

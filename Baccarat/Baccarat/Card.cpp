@@ -11,7 +11,7 @@ Card::~Card() {
 
 }
 const array<string, 14> Card::Ranks = { 
-	"0", "A", "2", "3", "4", "5", "6","7", "8",
+	"0", "Ace", "2", "3", "4", "5", "6","7", "8",
 	"9", "10", "J", "Q", "K" 
 };
 const array<string, 4> Card::Suits = {

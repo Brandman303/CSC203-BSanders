@@ -20,6 +20,7 @@ public:
 	void swap(vector<Card>& cards, int index1, int index2);
 	
 	const vector<Card>& getCards() const;
+	Card getCard();
 	void setCards(const vector<Card>& cards);
 	string toString();
 };

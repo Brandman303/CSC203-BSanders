@@ -18,7 +18,8 @@ public:
 	void addToHand(Card card);
 	void clearHand();
 	int handTotal();
-
+	size_t handSize();
+	Card getCard(int index);
 	vector<Card> getHand();
 	void setHand(vector<Card> hand);
 	string toString();
