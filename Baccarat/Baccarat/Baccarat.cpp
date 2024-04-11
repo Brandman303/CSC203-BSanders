@@ -6,5 +6,5 @@ using namespace std;
 
 int main() {
 	Deck deck;
-	deck.toString();
+	cout << deck.toString();
 }
