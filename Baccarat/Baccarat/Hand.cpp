@@ -49,6 +49,21 @@ vector<Card> Hand::getHand() {
 void Hand::setHand(vector<Card> hand) {
 	this->hand = hand;
 }
-string Hand::toString() {
-	return hand[0].toString() + ", " + hand[1].toString() + ", " + hand[2].toString();
+
+vector<Card>::iterator Hand::begin() {
+	return hand.begin();
 }
+vector<Card>::iterator Hand::end() {
+	return hand.end();
+}
+string Hand::toString(Hand hand) {
+	
+	string cardInHand = "";
+	for (Card& card : hand) {  // Use const reference to avoid copying the card object
+		cardInHand += card.toString() + " ";
+	}
+	cardInHand += "Total: " + to_string(hand.handTotal());
+	return cardInHand;
+	
+}
+

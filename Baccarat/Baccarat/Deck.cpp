@@ -65,6 +65,7 @@ const vector<Card>& Deck::getCards() const {
 }
 Card Deck::getCard() {
 	Card card = cards.back();
+	cards.pop_back();
 	return card;
 }
 //sets the deck of cards to a new deck of cards.
@@ -75,10 +76,14 @@ void Deck::setCards(const vector<Card>& cards) {
 //double check the logic. It may not work as intended.
 string Deck::toString() {
 	string str;
+	int rank;
+	int suit;
 	for (size_t i = 0; i < cards.size(); ++i) {
 		if (i > 0) {
 			str += ", ";
 		}
+		rank = cards[i].getRank();
+		suit = cards[i].getSuit();
 		str += cards[i].toString();
 	}
 	return str;

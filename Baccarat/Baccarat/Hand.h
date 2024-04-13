@@ -22,7 +22,8 @@ public:
 	Card getCard(int index);
 	vector<Card> getHand();
 	void setHand(vector<Card> hand);
-	string toString();
-
-};
+	string toString(Hand hand);
+	vector<Card>::iterator begin();
+	vector<Card>::iterator end();
+};	
 #endif

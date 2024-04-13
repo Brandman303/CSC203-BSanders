@@ -29,7 +29,7 @@ void Card::setRank(int newRank) {
 void Card::setSuit(int newSuit) {
 	suit = newSuit;
 }
-int Card::compareTo(const Card& oCard) {
+int Card::compareTo(Card& oCard) {
 	if (suit > oCard.suit) {
 		return 1;
 	}
@@ -46,6 +46,7 @@ int Card::compareTo(const Card& oCard) {
 		return 0;
 	}
 }
-string Card::toString() const {
+string Card::toString() {
 	return Ranks[rank] + " of " + Suits[suit];
 }
+
