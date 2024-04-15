@@ -2,9 +2,16 @@
 #include "Card.h"
 #include "Deck.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
+
 using namespace std;
+
+//function prototypes
+void play(Deck& deck, Hand& player, Hand& banker);
 void ideal(Deck& deck, Hand& player, Hand& banker);
 void deal(Deck& deck, Hand& hand);
+void printHands(Hand& player, Hand& banker);
 int gameOverCheck(Hand player, Hand banker);
 //game works, but check the game logic. Banker was standing on 0 when player had 0. banker should hit I believe.
 //consider making pas by value of Deck deck in function to pass by reference to increase efficiency.
@@ -13,111 +20,106 @@ int main() {
 	Deck deck;
 	Hand player;
 	Hand banker;
+	long wallet = 1000;
+	cout << "Welcome to Baccarat!" << endl;
+	cout << "Rules:  " << endl;
+	cout << "How To Play: " << endl;
+
+	play(deck, player, banker);
+	cout << "Game Over" << endl;
+}
+void play(Deck& deck, Hand& player, Hand& banker) {
 	bool play = true;
+	
 	while (play) {
 		deck.shuffle();
-		int winner = gameOverCheck(player, banker);
+		int winner = 0; //gameOverCheck(player, banker);
 		string yesNo;
 		ideal(deck, player, banker);
 		cout << "Player's hand: " << player.toString(player) << endl;
 		cout << "Banker's hand: " << banker.toString(banker) << endl;
-		if (player.handTotal() == (8 || 9) || banker.handTotal() == (8 || 9)) {
-			winner = gameOverCheck(player, banker);
-		}
-		if (player.handTotal() == (6, 7)) {
-			if (banker.handTotal() < 7) {
+		if (player.handTotal() == 6 || player.handTotal() == 7) {
+			if (banker.handTotal() <= 6) {
 				deal(deck, banker);
-				cout << "Player's hand: " << player.toString(player) << endl;
-				cout << "Banker's hand: " << banker.toString(banker) << endl;
-				winner = gameOverCheck(player, banker);
-			}
-			else {
-				winner = gameOverCheck(player, banker);
+				//printHands(player, banker);
 			}
 		}
-		if (player.handTotal() < 6) {
+		if (player.handTotal() <= 5) {
 			deal(deck, player);
-			cout << "Player's hand: " << player.toString(player) << endl;
-			cout << "Banker's hand: " << banker.toString(banker) << endl;
+			//printHands(player, banker);
 			switch (banker.handTotal()) {
-			case 1: 
+			case 1:
 				deal(deck, banker);
-				cout << "Player's hand: " << player.toString(player) << endl;
-				cout << "Banker's hand: " << banker.toString(banker) << endl;
-				winner = gameOverCheck(player, banker);
+				//printHands(player, banker);
+				break;
 			case 2:
 				deal(deck, banker);
-				cout << "Player's hand: " << player.toString(player) << endl;
-				cout << "Banker's hand: " << banker.toString(banker) << endl;
-				winner = gameOverCheck(player, banker);
+				//printHands(player, banker);
+				break;
 			case 3:
-				if (player.getCard(2).getRank() < 8) {
+				if (player.getCard(2).getRank() != 8) {
 					deal(deck, banker);
-					cout << "Player's hand: " << player.toString(player) << endl;
-					cout << "Banker's hand: " << banker.toString(banker) << endl;
-					winner = gameOverCheck(player, banker);
+					//printHands(player, banker);
 				}
-				else {
-					winner = gameOverCheck(player, banker);
-				}
+				break;
 			case 4:
 				if (player.getCard(2).getRank() < 8 && player.getCard(2).getRank() > 1) {
 					deal(deck, banker);
-					cout << "Player's hand: " << player.toString(player) << endl;
-					cout << "Banker's hand: " << banker.toString(banker) << endl;
-					winner = gameOverCheck(player, banker);
+					//printHands(player, banker);
 				}
-				else {
-					winner = gameOverCheck(player, banker);
-				}
+				break;
 			case 5:
 				if (player.getCard(2).getRank() < 8 && player.getCard(2).getRank() > 3) {
 					deal(deck, banker);
-					cout << "Player's hand: " << player.toString(player) << endl;
-					cout << "Banker's hand: " << banker.toString(banker) << endl;
-					winner = gameOverCheck(player, banker);
+					//printHands(player, banker);
 				}
-				else {
-					winner = gameOverCheck(player, banker);
-				}
+				break;
 			case 6:
 				if (player.getCard(2).getRank() < 8 && player.getCard(2).getRank() > 5) {
 					deal(deck, banker);
-					cout << "Player's hand: " << player.toString(player) << endl;
-					cout << "Banker's hand: " << banker.toString(banker) << endl;
+					//printHands(player, banker);
 					winner = gameOverCheck(player, banker);
 				}
-				else {
-					winner = gameOverCheck(player, banker);
-				}
+				break;
 			case 7:
-				winner = gameOverCheck(player, banker);
+				break;
+			case 8:
+				break;
+			case 9:
+				break;
 			default:
-				winner = gameOverCheck(player, banker);
+				break;
 			}
 		}
+		cout << endl << "DEALING" << endl;
+		for (int i = 0; i < 3; i++) {
+			cout << "." << endl << flush;
+			this_thread::sleep_for(chrono::seconds(1));
+		}
+		cout << endl;
+		printHands(player, banker);
+		winner = gameOverCheck(player, banker);
 
 		if (winner > 0) {
 			cout << "Player wins!" << endl;
-			
+
 		}
-		else if (winner < 0) {
+		if (winner < 0) {
 			cout << "Banker wins!" << endl;
 		}
-		else {
+		if (winner == 0) {
 			cout << "Tie!" << endl;
 		}
-		cout << "Player's hand: " << player.toString(player) << endl;
-		cout << "Banker's hand: " << banker.toString(banker) << endl;
+		//cout << "Player's hand: " << player.toString(player) << endl;
+		//cout << "Banker's hand: " << banker.toString(banker) << endl;
 		cout << "Play Again? (Y/N)" << endl;
-		cin >> yesNo;
+		std::cin >> yesNo;
 		(yesNo == "Y" || yesNo == "y") ? play = true : play = false;
 		player.clearHand();
 		banker.clearHand();
 	}
-	cout << "Game Over" << endl;
 }
-
+//Initial deal of two cards to each player
 void ideal(Deck& deck, Hand& player, Hand& banker) {
 	if (player.handSize() == 0 && banker.handSize() == 0) {
 		while (banker.handSize() < 2) {
@@ -126,18 +128,27 @@ void ideal(Deck& deck, Hand& player, Hand& banker) {
 		}
 	}
 }
+//deals a single card
 void deal(Deck& deck, Hand& hand) {
-	hand.addToHand(deck.getCard());
+	if (hand.handSize() < 3) {
+		hand.addToHand(deck.getCard());
+	}
 }
+//prints the player and banker hands.
+void printHands(Hand& player, Hand& banker) {
+	cout << "player's Hand: " << player.toString(player) << endl;
+	cout << "Banker's Hand: " << banker.toString(banker) << endl;
+}
+int handleBet(long& wallet) {
+}
+
 //consider renaming to tableResult or determineWinner
 int gameOverCheck(Hand player, Hand banker) {
 	if (player.handTotal() > banker.handTotal()) {
 		return 1;
 	}
-	else if (player.handTotal() < banker.handTotal()) {
+	if (player.handTotal() < banker.handTotal()) {
 		return -1;
 	}
-	else {
-		return 0;
-	}
+	return 0;
 }
