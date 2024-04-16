@@ -139,7 +139,8 @@ void printHands(Hand& player, Hand& banker) {
 	cout << "player's Hand: " << player.toString(player) << endl;
 	cout << "Banker's Hand: " << banker.toString(banker) << endl;
 }
-int handleBet(long& wallet) {
+//handles the winnings or losses.
+long betResult(long& wallet) {
 }
 
 //consider renaming to tableResult or determineWinner
