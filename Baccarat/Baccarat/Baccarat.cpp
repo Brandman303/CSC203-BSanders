@@ -9,10 +9,13 @@ using namespace std;
 
 //function prototypes
 void play(Deck& deck, Hand& player, Hand& banker);
-void ideal(Deck& deck, Hand& player, Hand& banker);
+void initialDeal(Deck& deck, Hand& player, Hand& banker);
 void deal(Deck& deck, Hand& hand);
 void printHands(Hand& player, Hand& banker);
-int gameOverCheck(Hand player, Hand banker);
+int tableResult(Hand player, Hand banker);
+long betResult(long& wallet, int betType, long bet, int winner);
+long makeBet(long& wallet);
+
 //game works, but check the game logic. Banker was standing on 0 when player had 0. banker should hit I believe.
 //consider making pas by value of Deck deck in function to pass by reference to increase efficiency.
 //ask Robert if the IDE provides some sort of indicator for efficiency, Would it be how long the build took?
@@ -30,12 +33,37 @@ int main() {
 }
 void play(Deck& deck, Hand& player, Hand& banker) {
 	bool play = true;
-	
 	while (play) {
 		deck.shuffle();
 		int winner = 0; //gameOverCheck(player, banker);
 		string yesNo;
-		ideal(deck, player, banker);
+		int betType;
+		long wallet = 1000;
+		long bet = 5;
+		long result = 0;
+
+		cout << "Wallet: " << wallet << endl;
+		cout << "1. Bet on player" << endl;
+		cout << "2. Bet on banker" << endl;
+		cout << "3. Bet on Tie" << endl;
+		cout << "Please enter your choice by corresponding number: " << endl;
+		cin >> betType;
+
+		switch (betType) {
+		case 1:
+			cout << "You have chosen to bet on Player, with payout 1:1" << endl;
+			bet = makeBet(wallet);
+			break;
+		case 2:
+			cout << "You have chosen to bet on Banker, with payout 0.95:1" << endl;
+			bet = makeBet(wallet);
+			break;
+		case 3:
+			cout << "You have chosen to bet on Tie, with payout 8:1" << endl;
+			bet = makeBet(wallet);
+			break;
+		}
+		initialDeal(deck, player, banker);
 		cout << "Player's hand: " << player.toString(player) << endl;
 		cout << "Banker's hand: " << banker.toString(banker) << endl;
 		if (player.handTotal() == 6 || player.handTotal() == 7) {
@@ -78,7 +106,7 @@ void play(Deck& deck, Hand& player, Hand& banker) {
 				if (player.getCard(2).getRank() < 8 && player.getCard(2).getRank() > 5) {
 					deal(deck, banker);
 					//printHands(player, banker);
-					winner = gameOverCheck(player, banker);
+					winner = tableResult(player, banker);
 				}
 				break;
 			case 7:
@@ -98,7 +126,7 @@ void play(Deck& deck, Hand& player, Hand& banker) {
 		}
 		cout << endl;
 		printHands(player, banker);
-		winner = gameOverCheck(player, banker);
+		winner = tableResult(player, banker);
 
 		if (winner > 0) {
 			cout << "Player wins!" << endl;
@@ -112,6 +140,15 @@ void play(Deck& deck, Hand& player, Hand& banker) {
 		}
 		//cout << "Player's hand: " << player.toString(player) << endl;
 		//cout << "Banker's hand: " << banker.toString(banker) << endl;
+		//put bet result if win or loss here
+		result = betResult(wallet, betType, bet, winner); //do not call multiple times since it runs through the function each time. that is causeing extra changes to wallet
+		if (result > 0) {
+		cout << "bet result: " << result << endl;
+		}
+		else {
+			cout << "bet result: " << result - 5 << endl;
+		}
+		cout << "wallet: " << wallet << endl; // may or may not want this here.
 		cout << "Play Again? (Y/N)" << endl;
 		std::cin >> yesNo;
 		(yesNo == "Y" || yesNo == "y") ? play = true : play = false;
@@ -120,7 +157,7 @@ void play(Deck& deck, Hand& player, Hand& banker) {
 	}
 }
 //Initial deal of two cards to each player
-void ideal(Deck& deck, Hand& player, Hand& banker) {
+void initialDeal(Deck& deck, Hand& player, Hand& banker) {
 	if (player.handSize() == 0 && banker.handSize() == 0) {
 		while (banker.handSize() < 2) {
 			player.addToHand(deck.getCard());
@@ -139,12 +176,64 @@ void printHands(Hand& player, Hand& banker) {
 	cout << "player's Hand: " << player.toString(player) << endl;
 	cout << "Banker's Hand: " << banker.toString(banker) << endl;
 }
-//handles the winnings or losses.
-long betResult(long& wallet) {
+//handles the winnings or losses. may not need the wallet, just change it in play function.
+long betResult(long& wallet, int betType, long bet, int winner) {
+	long result = 0;
+	switch (betType) {
+	case 1:
+		if (winner > 0) {
+			result = bet * 2;
+			wallet += result;
+		}
+		else {
+			wallet -= bet;
+		}
+		break;
+	case 2:
+		if (winner < 0) {
+			//check the accuracy of this. I am using multiple types here may need to use double. see if long has decimals
+			result = bet * 1.95;
+			wallet += result;
+		}
+		else {
+			wallet -= bet;
+		}
+		break;
+	case 3:
+		if (winner == 0) {
+			result = bet * 9; // check this math
+			wallet += result;
+		}
+		else {
+			wallet -= bet;
+		}
+		break;
+	default:
+		cout << "something went wrong in bet result." << endl;
+		break;
+	}
+	return result;
 }
 
+long makeBet(long& wallet) {
+	long bet = 5;
+	if (bet < 1000 && bet >= 5) {
+		cout << "Minimum bet is 5. Place your bets: " << endl;
+		cin >> bet;
+		if (bet > wallet) {
+			cout << "Bet exceeds wallet. Please re-enter bet." << endl;
+		}
+		else {
+			wallet -= bet;
+		}
+	}
+	else {
+		cout << "Invalid bet. Please re-enter bet." << endl;
+	}
+	return bet; //check if it returns correct value.
+}
 //consider renaming to tableResult or determineWinner
-int gameOverCheck(Hand player, Hand banker) {
+int tableResult(Hand player, Hand banker) {
 	if (player.handTotal() > banker.handTotal()) {
 		return 1;
 	}
