@@ -17,6 +17,7 @@ long betResult(long& wallet, int betType, long bet, int winner);
 long makeBet(long& wallet);
 
 //game works, but check the game logic. Banker was standing on 0 when player had 0. banker should hit I believe.
+// I no longer think banker is standing on zero but instead standing whenver player has natural 8 or 9
 //consider making pas by value of Deck deck in function to pass by reference to increase efficiency.
 //ask Robert if the IDE provides some sort of indicator for efficiency, Would it be how long the build took?
 int main() {
@@ -33,14 +34,14 @@ int main() {
 }
 void play(Deck& deck, Hand& player, Hand& banker) {
 	bool play = true;
+	long wallet = 1000;
+	long bet = 5;
+	long result = 0;
 	while (play) {
 		deck.shuffle();
 		int winner = 0; //gameOverCheck(player, banker);
 		string yesNo;
 		int betType;
-		long wallet = 1000;
-		long bet = 5;
-		long result = 0;
 
 		cout << "Wallet: " << wallet << endl;
 		cout << "1. Bet on player" << endl;
@@ -106,7 +107,7 @@ void play(Deck& deck, Hand& player, Hand& banker) {
 				if (player.getCard(2).getRank() < 8 && player.getCard(2).getRank() > 5) {
 					deal(deck, banker);
 					//printHands(player, banker);
-					winner = tableResult(player, banker);
+					//winner = tableResult(player, banker);
 				}
 				break;
 			case 7:
@@ -142,11 +143,14 @@ void play(Deck& deck, Hand& player, Hand& banker) {
 		//cout << "Banker's hand: " << banker.toString(banker) << endl;
 		//put bet result if win or loss here
 		result = betResult(wallet, betType, bet, winner); //do not call multiple times since it runs through the function each time. that is causeing extra changes to wallet
-		if (result > 0) {
-		cout << "bet result: " << result << endl;
+		if (winner > 0) {
+			cout << "bet result: " << result << endl;
 		}
-		else {
-			cout << "bet result: " << result - 5 << endl;
+		if (winner < 0) {
+			cout << "bet result: " << result - bet<< endl;
+		}
+		if (winner == 0) {
+			cout << "bet result: push" << endl;
 		}
 		cout << "wallet: " << wallet << endl; // may or may not want this here.
 		cout << "Play Again? (Y/N)" << endl;
@@ -179,13 +183,14 @@ void printHands(Hand& player, Hand& banker) {
 //handles the winnings or losses. may not need the wallet, just change it in play function.
 long betResult(long& wallet, int betType, long bet, int winner) {
 	long result = 0;
+	//case 1 and 2 need another if statment to handle if a tie happens but they player did not bet on it, the bet should be push.
 	switch (betType) {
 	case 1:
 		if (winner > 0) {
 			result = bet * 2;
 			wallet += result;
 		}
-		else {
+		if (winner < 0) {
 			wallet -= bet;
 		}
 		break;
@@ -195,7 +200,7 @@ long betResult(long& wallet, int betType, long bet, int winner) {
 			result = bet * 1.95;
 			wallet += result;
 		}
-		else {
+		if (winner > 0) {
 			wallet -= bet;
 		}
 		break;
@@ -224,7 +229,7 @@ long makeBet(long& wallet) {
 			cout << "Bet exceeds wallet. Please re-enter bet." << endl;
 		}
 		else {
-			wallet -= bet;
+			//wallet -= bet;
 		}
 	}
 	else {
