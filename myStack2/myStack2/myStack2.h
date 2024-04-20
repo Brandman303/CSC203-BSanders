@@ -12,16 +12,15 @@ namespace stack { //what is the nameing convention for namespace?
 	template <typename T>
 	class myStack2 {
 	private:
-		vector<T> data; //maybe just T data?
-		//if doesnt work as T data do vector<T> data
+		vector<T> data; 
 	public:
-		myStack2(); // no arg correct?
+		myStack2(); 
 		~myStack2();
 		void push(T d);
 		T pop();
 		bool isEmpty();
 		void print(ostream& os) const;
-		friend std::ostream& operator << (std::ostream&, myStack2<T>&); //stack should be data i think
+		friend std::ostream& operator << (std::ostream&, myStack2<T>&); 
 		T get() const;
 		void set(T& d);
 	};
