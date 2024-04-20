@@ -1,0 +1,12 @@
+Integers: 
+3
+2
+1
+Floats: 
+3.3
+2.2
+1.1
+strings: 
+three
+two
+one
